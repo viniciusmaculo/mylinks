@@ -206,7 +206,7 @@ export function Admin() {
             {currentUser && currentUser.displayName && (
                 <div className='mt-5'>
                     <h3 className='font-bold text-white text-2xl mb-5'>Esse é o seu link único:</h3>
-                    <Link to={`http://localhost:5173/${currentUser.displayName}`} className='text-yellow-500 font-bold underline border-gray-100/25 border rounded-md p-3'>http://localhost:5173/{currentUser.displayName}</Link>
+                    <Link to={`https://mylinks-lovat.vercel.app/${currentUser.displayName}`} className='text-yellow-500 font-bold underline border-gray-100/25 border rounded-md p-3'>https://mylinks-lovat.vercel.app/{currentUser.displayName}</Link>
                 </div>
              )}
         </div>
