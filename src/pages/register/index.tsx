@@ -39,7 +39,10 @@ export function Register() {
 
     try {
 
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 1000 milissegundos = 1 segundo
+
     const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+    console.log(signInMethods)
       if (signInMethods.length > 0) {
         alert("E-mail já cadastrado!");
         return;
