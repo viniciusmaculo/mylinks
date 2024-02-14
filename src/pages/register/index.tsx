@@ -73,7 +73,7 @@ export function Register() {
       console.log("Usuário cadastrado com sucesso!");
       navigate("/admin", { replace: true });
     } catch (error) {
-      alert("E-mail já cadastrado!");
+      alert("Ocorreu um erro" + error);
     }
   }
 
