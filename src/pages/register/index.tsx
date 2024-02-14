@@ -1,5 +1,5 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from "firebase/auth";
-import {collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, onAuthStateChanged, updateProfile } from "firebase/auth";
+import {collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { auth, db } from "../../services/firebaseConnection";
 import { FormEvent, useEffect, useState } from "react";
 import { Input } from "../../components/input";
@@ -39,24 +39,18 @@ export function Register() {
 
     try {
 
+    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.length > 0) {
+        alert("E-mail já cadastrado!");
+        return;
+      }
+
     // Consulta para verificar se o nome de usuário já está cadastrado
     const usernameQuerySnapshot = await getDocs(query(collection(db, "uidUsernameAssociations"), where("username", "==", username)));
     if (!usernameQuerySnapshot.empty) {
       alert("Nome de usuário já cadastrado.");
       return;
     }
-
-      const usernameDoc = await getDoc(doc(db, "uidUsernameAssociations", username));
-      if (usernameDoc.exists()) {
-        alert("Nome de usuário já cadastrado.");
-        return;
-      }
-
-      const usernameSnapshot = await getDoc(doc(db, "uidUsernameAssociations", username));
-      if (usernameSnapshot.exists()) {
-        alert("Nome de usuário já cadastrado.");
-        return;
-      }
 
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -73,7 +67,7 @@ export function Register() {
       console.log("Usuário cadastrado com sucesso!");
       navigate("/admin", { replace: true });
     } catch (error) {
-      console.log("Ocorreu um erro" + error);
+      console.log("Ocorreu um erro." + error);
     }
   }
 
