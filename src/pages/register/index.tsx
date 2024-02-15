@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from "firebase/auth";
 import {collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { auth, db } from "../../services/firebaseConnection";
 import { FormEvent, useEffect, useState } from "react";
@@ -39,19 +39,17 @@ export function Register() {
 
     try {
 
-    await new Promise(resolve => setTimeout(resolve, 1000)); // 1000 milissegundos = 1 segundo
-
-    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-    console.log(signInMethods)
-      if (signInMethods.length > 0) {
-        alert("E-mail já cadastrado!");
-        return;
-      }
-
-    // Consulta para verificar se o nome de usuário já está cadastrado
-    const usernameQuerySnapshot = await getDocs(query(collection(db, "uidUsernameAssociations"), where("username", "==", username)));
-    if (!usernameQuerySnapshot.empty) {
+    // Consulta para verificar se o usuário já está cadastrado
+    const emailQuerySnapshot = await getDocs(query(collection(db, "uidUsernameAssociations"), where("username", "==", username)));
+    if (!emailQuerySnapshot.empty) {
       alert("Nome de usuário já cadastrado.");
+      return;
+    }
+
+    // Consulta para verificar se o e-mail já está cadastrado
+    const usernameQuerySnapshot = await getDocs(query(collection(db, "uidUsernameAssociations"), where("email", "==", email)));
+    if (!usernameQuerySnapshot.empty) {
+      alert("E-mail já cadastrado.");
       return;
     }
 
@@ -65,6 +63,7 @@ export function Register() {
       const associationRef = doc(db, "uidUsernameAssociations", uid);
       await setDoc(associationRef, {
         username: username,
+        email: email
       });
 
       console.log("Usuário cadastrado com sucesso!");
