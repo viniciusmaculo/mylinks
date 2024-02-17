@@ -6,6 +6,7 @@ import { Input } from "../../components/input";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+
 export function Register() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -34,6 +35,11 @@ export function Register() {
 
     if (password !== confirmPassword) {
       alert("As senhas não coincidem.");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("A senha deve ter pelo menos 6 caracteres.");
       return;
     }
 
@@ -66,7 +72,6 @@ export function Register() {
         email: email
       });
 
-      console.log("Usuário cadastrado com sucesso!");
       navigate("/admin", { replace: true });
     } catch (error) {
       console.log("Ocorreu um erro." + error);
